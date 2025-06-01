@@ -63,6 +63,14 @@ const App: React.FC = () => {
 
   // this is the test commit
 
+  // this is the amend commit
+
+  // amend message
+
+  // add new commit
+
+  // this is committed with lovesweet
+
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault()
     setMessage("")
