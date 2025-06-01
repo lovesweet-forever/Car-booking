@@ -67,8 +67,6 @@ const App: React.FC = () => {
 
   // amend message
 
-  // add new commit
-
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault()
     setMessage("")
