@@ -67,6 +67,10 @@ const App: React.FC = () => {
 
   // amend message
 
+  // add new commit
+
+  // this is committed with lovesweet
+
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault()
     setMessage("")
