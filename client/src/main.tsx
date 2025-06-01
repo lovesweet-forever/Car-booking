@@ -9,9 +9,8 @@ createRoot(document.getElementById('root')!).render(
   </StrictMode>,
 )
 
-<<<<<<< HEAD
 // this is new first commit from test-1 branch
-=======
+
 // this is new first commit from test-1 branch
 
 // this is the third commit from test-1 branch with revert
@@ -26,4 +25,5 @@ createRoot(document.getElementById('root')!).render(
 
 
 // we added some data for git revert
->>>>>>> parent of f2d0a0e (revert second commit)
+
+// rerevert cheange
