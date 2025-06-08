@@ -15,7 +15,7 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v3
         with:
-          node-version: '22'  # Node.js version
+          node-version: '22'
 
       - name: Install and Build Frontend
         working-directory: client
@@ -23,15 +23,25 @@ jobs:
           npm ci
           npm run build
 
+      - name: Prepare Directories on VPS
+        uses: appleboy/ssh-action@v1.0.0
+        with:
+          host: ${{ secrets.VPS_HOST }}
+          username: ${{ secrets.VPS_USER }}
+          password: ${{ secrets.VPS_PASSWORD }}
+          port: 22
+          script: |
+            mkdir "C:/Users/Administrator/frontend-dist" || exit 0
+
       - name: Deploy Frontend to VPS
-        uses: appleboy/sftp-action@v0.1.2
+        uses: appleboy/scp-action@v0.1.0
         with:
           host: ${{ secrets.VPS_HOST }}
           username: ${{ secrets.VPS_USER }}
           password: ${{ secrets.VPS_PASSWORD }}
           port: 22
           source: "client/dist/*"
-          target: "C:/Users/Administrator/frontend-dist"  # Windows path
+          target: "C:/Users/Administrator/frontend-dist"
 
       - name: Start Frontend Server
         uses: appleboy/ssh-action@v1.0.0
@@ -46,7 +56,7 @@ jobs:
 
   build-backend:
     runs-on: ubuntu-latest
-    needs: build-frontend   # Wait for frontend to finish
+    needs: build-frontend
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
@@ -60,15 +70,25 @@ jobs:
         working-directory: server
         run: npm ci
 
+      - name: Prepare Directories on VPS
+        uses: appleboy/ssh-action@v1.0.0
+        with:
+          host: ${{ secrets.VPS_HOST }}
+          username: ${{ secrets.VPS_USER }}
+          password: ${{ secrets.VPS_PASSWORD }}
+          port: 22
+          script: |
+            mkdir "C:/Users/Administrator/backend" || exit 0
+
       - name: Deploy Backend to VPS
-        uses: appleboy/sftp-action@v0.1.2
+        uses: appleboy/scp-action@v0.1.0
         with:
           host: ${{ secrets.VPS_HOST }}
           username: ${{ secrets.VPS_USER }}
           password: ${{ secrets.VPS_PASSWORD }}
           port: 22
           source: "server/*"
-          target: "C:/Users/Administrator/backend"  # Windows path
+          target: "C:/Users/Administrator/backend"
 
       - name: Start Backend Server
         uses: appleboy/ssh-action@v1.0.0
