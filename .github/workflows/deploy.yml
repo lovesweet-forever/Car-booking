@@ -97,4 +97,4 @@ jobs:
             npm install --omit=dev
             npm run build
             pm2 delete backend || true
-            pm2 start src/index.ts --name backend
+            pm2 start dist/index.js --name backend
