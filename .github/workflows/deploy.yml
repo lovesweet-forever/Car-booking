@@ -1,0 +1,84 @@
+name: Build and Deploy Monorepo (Frontend + Backend)
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build-frontend:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '22'
+
+      - name: Install and Build Frontend
+        working-directory: client
+        run: |
+          npm ci
+          npm run build
+
+      - name: Deploy Frontend to VPS
+        uses: appleboy/scp-action@v0.1.0
+        with:
+          host: ${{ secrets.VPS_HOST }}
+          username: ${{ secrets.VPS_USER }}
+          password: ${{ secrets.VPS_PASSWORD }}
+          port: 22
+          source: "client/dist/*"
+          target: "~/frontend-dist"
+
+      - name: Start Frontend Server
+        uses: appleboy/ssh-action@v1.0.0
+        with:
+          host: ${{ secrets.VPS_HOST }}
+          username: ${{ secrets.VPS_USER }}
+          password: ${{ secrets.VPS_PASSWORD }}
+          port: 22
+          script: |
+            pm2 delete frontend || true
+            pm2 start "npx serve -s ~/frontend-dist -l 3001" --name frontend
+
+  build-backend:
+    runs-on: ubuntu-latest
+    needs: build-frontend   # Wait for frontend to finish
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '22'
+
+      - name: Install and Deploy Backend
+        working-directory: server
+        run: npm ci
+
+      - name: Deploy Backend to VPS
+        uses: appleboy/scp-action@v0.1.0
+        with:
+          host: ${{ secrets.VPS_HOST }}
+          username: ${{ secrets.VPS_USER }}
+          password: ${{ secrets.VPS_PASSWORD }}
+          port: 22
+          source: "server/*"
+          target: "~/backend"
+
+      - name: Start Backend Server
+        uses: appleboy/ssh-action@v1.0.0
+        with:
+          host: ${{ secrets.VPS_HOST }}
+          username: ${{ secrets.VPS_USER }}
+          password: ${{ secrets.VPS_PASSWORD }}
+          port: 22
+          script: |
+            cd ~/backend
+            npm ci --production
+            pm2 delete backend || true
+            pm2 start src/index.js --name backend
