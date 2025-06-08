@@ -23,7 +23,7 @@ jobs:
           npm ci
           npm run build
 
-      - name: Prepare Directories on VPS
+      - name: Prepare Nginx Directory
         uses: appleboy/ssh-action@v1.0.0
         with:
           host: ${{ secrets.VPS_HOST }}
@@ -31,9 +31,11 @@ jobs:
           password: ${{ secrets.VPS_PASSWORD }}
           port: 22
           script: |
-            mkdir -p ~/frontend-dist
+            sudo mkdir -p /var/www/my-frontend
+            sudo chown -R $USER:$USER /var/www/my-frontend
+            sudo rm -rf /var/www/my-frontend/*
 
-      - name: Deploy Frontend to VPS
+      - name: Deploy Frontend to Nginx Directory
         uses: appleboy/scp-action@v0.1.0
         with:
           host: ${{ secrets.VPS_HOST }}
@@ -41,18 +43,7 @@ jobs:
           password: ${{ secrets.VPS_PASSWORD }}
           port: 22
           source: "client/dist/*"
-          target: "~/frontend-dist"
-
-      - name: Start Frontend Server
-        uses: appleboy/ssh-action@v1.0.0
-        with:
-          host: ${{ secrets.VPS_HOST }}
-          username: ${{ secrets.VPS_USER }}
-          password: ${{ secrets.VPS_PASSWORD }}
-          port: 22
-          script: |
-            pm2 delete frontend || true
-            pm2 start "npx serve -s ~/frontend-dist -l 3001" --name frontend
+          target: "/var/www/my-frontend"
 
   build-backend:
     runs-on: ubuntu-latest
@@ -70,7 +61,7 @@ jobs:
         working-directory: server
         run: npm ci
 
-      - name: Prepare Directories on VPS
+      - name: Prepare Backend Directory
         uses: appleboy/ssh-action@v1.0.0
         with:
           host: ${{ secrets.VPS_HOST }}
