@@ -7,43 +7,43 @@ on:
 
 jobs:
   build-frontend:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
+  runs-on: ubuntu-latest
+  steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
 
-      - name: Setup Node.js
-        uses: actions/setup-node@v3
-        with:
-          node-version: '22'
+    - name: Setup Node.js
+      uses: actions/setup-node@v3
+      with:
+        node-version: '22'
 
-      - name: Install and Build Frontend
-        working-directory: client
-        run: |
-          npm ci
-          npm run build
+    - name: Install and Build Frontend
+      working-directory: client
+      run: |
+        npm ci
+        npm run build
 
-      - name: Clean Nginx Directory
-        uses: appleboy/ssh-action@v1.0.0
-        with:
-          host: ${{ secrets.VPS_HOST }}
-          username: ${{ secrets.VPS_USER }}
-          password: ${{ secrets.VPS_PASSWORD }}
-          port: 22
-          script: |
-            sudo rm -rf /var/www/htm/*
-            sudo mkdir -p /var/www/html
-            sudo chown -R $USER:$USER /var/www/html
+    - name: Clean Nginx Directory
+      uses: appleboy/ssh-action@v1.0.0
+      with:
+        host: ${{ secrets.VPS_HOST }}
+        username: ${{ secrets.VPS_USER }}
+        password: ${{ secrets.VPS_PASSWORD }}
+        port: 22
+        script: |
+          sudo rm -rf /var/www/html/*
+          sudo mkdir -p /var/www/html
+          sudo chown -R $USER:$USER /var/www/html
 
-      - name: Deploy Frontend to Nginx Directory
-        uses: appleboy/scp-action@v0.1.0
-        with:
-          host: ${{ secrets.VPS_HOST }}
-          username: ${{ secrets.VPS_USER }}
-          password: ${{ secrets.VPS_PASSWORD }}
-          port: 22
-          source: "client/dist/*"
-          target: "/var/www/html"
+    - name: Deploy Frontend to Nginx Directory
+      uses: appleboy/scp-action@v0.1.0
+      with:
+        host: ${{ secrets.VPS_HOST }}
+        username: ${{ secrets.VPS_USER }}
+        password: ${{ secrets.VPS_PASSWORD }}
+        port: 22
+        source: "client/dist/*"
+        target: "/var/www/html"
 
   build-backend:
     runs-on: ubuntu-latest
