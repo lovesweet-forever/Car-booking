@@ -31,7 +31,7 @@ jobs:
           password: ${{ secrets.VPS_PASSWORD }}
           port: 22
           source: "client/dist/*"
-          target: "~/frontend-dist"
+          target: "C:/Users/Administrator/frontend-dist"
 
       - name: Start Frontend Server
         uses: appleboy/ssh-action@v1.0.0
@@ -68,7 +68,7 @@ jobs:
           password: ${{ secrets.VPS_PASSWORD }}
           port: 22
           source: "server/*"
-          target: "~/backend"
+          target: "C:/Users/Administrator/backend"
 
       - name: Start Backend Server
         uses: appleboy/ssh-action@v1.0.0
