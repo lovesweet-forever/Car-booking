@@ -60,7 +60,9 @@ jobs:
 
       - name: Install Backend Dependencies
         working-directory: server
-        run: npm ci
+        run: |
+          npm ci
+          npm run build || true
 
       - name: Clean Backend Directory
         uses: appleboy/ssh-action@v1.0.0
@@ -95,4 +97,4 @@ jobs:
             npm install --omit=dev
             npm run build
             pm2 delete backend || true
-            pm2 start dist/index.js --name backend
+            pm2 start src/index.js --name backend
