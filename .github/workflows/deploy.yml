@@ -24,7 +24,7 @@ jobs:
           npm run build
 
       - name: Deploy Frontend to VPS
-        uses: appleboy/scp-action@v0.1.0
+        uses: appleboy/sftp-action@v0.1.2
         with:
           host: ${{ secrets.VPS_HOST }}
           username: ${{ secrets.VPS_USER }}
@@ -56,12 +56,12 @@ jobs:
         with:
           node-version: '22'
 
-      - name: Install and Deploy Backend
+      - name: Install and Build Backend
         working-directory: server
         run: npm ci
 
       - name: Deploy Backend to VPS
-        uses: appleboy/scp-action@v0.1.0
+        uses: appleboy/sftp-action@v0.1.2
         with:
           host: ${{ secrets.VPS_HOST }}
           username: ${{ secrets.VPS_USER }}
