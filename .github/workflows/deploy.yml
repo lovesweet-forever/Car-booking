@@ -31,7 +31,7 @@ jobs:
           password: ${{ secrets.VPS_PASSWORD }}
           port: 22
           script: |
-            mkdir frontend-dist || exit 0
+            mkdir -p ~/frontend-dist
 
       - name: Deploy Frontend to VPS
         uses: appleboy/scp-action@v0.1.0
@@ -41,7 +41,7 @@ jobs:
           password: ${{ secrets.VPS_PASSWORD }}
           port: 22
           source: "client/dist/*"
-          target: "./frontend-dist"
+          target: "~/frontend-dist"
 
       - name: Start Frontend Server
         uses: appleboy/ssh-action@v1.0.0
@@ -52,7 +52,7 @@ jobs:
           port: 22
           script: |
             pm2 delete frontend || true
-            pm2 start "npx serve -s C:/Users/Administrator/frontend-dist -l 3001" --name frontend
+            pm2 start "npx serve -s ~/frontend-dist -l 3001" --name frontend
 
   build-backend:
     runs-on: ubuntu-latest
@@ -78,7 +78,7 @@ jobs:
           password: ${{ secrets.VPS_PASSWORD }}
           port: 22
           script: |
-            mkdir backend || exit 0
+            mkdir -p ~/backend
 
       - name: Deploy Backend to VPS
         uses: appleboy/scp-action@v0.1.0
@@ -88,7 +88,7 @@ jobs:
           password: ${{ secrets.VPS_PASSWORD }}
           port: 22
           source: "server/*"
-          target: "./backend"
+          target: "~/backend"
 
       - name: Start Backend Server
         uses: appleboy/ssh-action@v1.0.0
@@ -98,7 +98,7 @@ jobs:
           password: ${{ secrets.VPS_PASSWORD }}
           port: 22
           script: |
-            cd C:/Users/Administrator/backend
+            cd ~/backend
             npm ci --production
             pm2 delete backend || true
-            pm2 start "C:/Users/Administrator/backend/src/index.js" --name backend
+            pm2 start src/index.js --name backend
