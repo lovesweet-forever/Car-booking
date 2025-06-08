@@ -96,5 +96,6 @@ jobs:
             cd ~/backend/server
             npm install --omit=dev
             npm run build
+            npm run migration:run  # <-- run migration here
             pm2 delete backend || true
             pm2 start dist/index.js --name backend
