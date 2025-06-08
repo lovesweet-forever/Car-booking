@@ -75,7 +75,7 @@ const App: React.FC = () => {
     e.preventDefault()
     setMessage("")
     try {
-      const res = await fetch('http://localhost:3000/available-cars', {
+      const res = await fetch('http://95.217.136.137:3000/available-cars', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(form)
@@ -109,7 +109,7 @@ const App: React.FC = () => {
 
   const handleBook = async (index: number) => {
     try {
-      const res = await fetch('http://localhost:3000/bookings', {
+      const res = await fetch('http://95.217.136.137:3000/bookings', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ ...availableCars[index], user_id: userId, start_date: form.start_date, end_date: form.end_date })
