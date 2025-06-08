@@ -31,7 +31,7 @@ jobs:
           password: ${{ secrets.VPS_PASSWORD }}
           port: 22
           script: |
-            mkdir "C:/Users/Administrator/frontend-dist" || exit 0
+            mkdir frontend-dist || exit 0
 
       - name: Deploy Frontend to VPS
         uses: appleboy/scp-action@v0.1.0
@@ -41,7 +41,7 @@ jobs:
           password: ${{ secrets.VPS_PASSWORD }}
           port: 22
           source: "client/dist/*"
-          target: "C:/Users/Administrator/frontend-dist"
+          target: "./frontend-dist"
 
       - name: Start Frontend Server
         uses: appleboy/ssh-action@v1.0.0
@@ -78,7 +78,7 @@ jobs:
           password: ${{ secrets.VPS_PASSWORD }}
           port: 22
           script: |
-            mkdir "C:/Users/Administrator/backend" || exit 0
+            mkdir backend || exit 0
 
       - name: Deploy Backend to VPS
         uses: appleboy/scp-action@v0.1.0
@@ -88,7 +88,7 @@ jobs:
           password: ${{ secrets.VPS_PASSWORD }}
           port: 22
           source: "server/*"
-          target: "C:/Users/Administrator/backend"
+          target: "./backend"
 
       - name: Start Backend Server
         uses: appleboy/ssh-action@v1.0.0
