@@ -43,7 +43,7 @@ jobs:
           password: ${{ secrets.VPS_PASSWORD }}
           port: 22
           source: "client/dist/*"
-          target: "/var/www/html"
+          target: "/var/www/html/"
 
   build-backend:
     runs-on: ubuntu-latest
