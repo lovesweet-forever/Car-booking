@@ -42,8 +42,9 @@ jobs:
           username: ${{ secrets.VPS_USER }}
           password: ${{ secrets.VPS_PASSWORD }}
           port: 22
-          source: "client/dist/*"
-          target: "/var/www/html/"
+          source: "client/dist/"
+          target: "/var/www/html"
+          strip_components: 2
 
   build-backend:
     runs-on: ubuntu-latest
